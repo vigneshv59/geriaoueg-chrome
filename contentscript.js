@@ -12,7 +12,7 @@ $(document).mousestop(function() {
         var elem = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset));
             
         var nodes = elem.contents().filter(function(){
-            return this.nodeType == Node.TEXT_NODE 
+            return this.nodeType == Node.TEXT_NODE
         });
 
         $(nodes).wrap('<apertiumnode />');
@@ -35,7 +35,6 @@ $(document).mousestop(function() {
                 
                 var disp_txt = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset)).text()
                 // console.log(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset).contents())
-                disp_txt = XRegExp.replace(disp_txt, regex, "")
                     
                 $(".apertium-popup-translate-text").append(disp_txt)
                 $(".apertium-popup-translate").css("display","table")
