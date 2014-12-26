@@ -10,5 +10,7 @@
             "css": ["css/basic.css"],
             "js": ["js/jquery.min.js", "js/mousestop.min.js", "js/xregexp-all-min.js", "js/contentscript.js"]
         }
-    ]
+    ], "permissions": [
+        "storage"
+    ], "icons": {"128": "apertium128.png" }
 }

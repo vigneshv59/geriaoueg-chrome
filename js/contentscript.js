@@ -1,39 +1,59 @@
-var curr_ev = 'null'
- 
+var curr_ev = null
+var prev_x = -5
+var prev_y = -5
+var fr_x = 0
+var to_x = 0
+
 $("body").append("<div id = \"apertium-popup-translate\" class = \"apertium-popup-translate\"> <div id = \"apertium-popup-translate-text\" class = \"apertium-popup-translate-text\"> </div>")   
-    
+
+function real_movement(prex, prey, postx, posty) {
+    if (Math.sqrt(Math.pow(prex-postx, 2) + Math.pow(prey-posty, 2)) >= 10) {
+        return true;
+    }
+    return false;
+}
+
 $(document).mousemove(function(event) {
+    if ((curr_ev) && (real_movement(prev_x, prev_y, event.pageX - window.pageXOffset, curr_ev.pageY - window.pageYOffset))) {
+        $(".apertium-popup-translate").css("display","none")
+    }
     curr_ev = event
 });
 
 $(document).mousestop(function() {
-    if (curr_ev != 'null') {
+    if (curr_ev) {
 
         var elem = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset));
             
         var nodes = elem.contents().filter(function(){
-            return this.nodeType == Node.TEXT_NODE
+            return this.nodeType == Node.TEXT_NODE && !($(this).text().match(/\A\s*\z/))
         });
 
         $(nodes).wrap('<apertiumnode />');
 
         if (nodes.length == 0) {
             $(nodes).unwrap();
-        } else {
+        } else {            
             var text = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
-            if (text.nodeName == 'APERTIUMNODE') {                
-                var orig_text = $(text).text();
-                var words = $(text).text().split(/( )/);
+            if (text.nodeName == 'APERTIUMNODE') { 
+                $(nodes).unwrap();
+                 
+                var txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
+                var orig_text = $(txt).html();
+                var words = $(txt).text().split(/( )/);
                 
                 
-                $(text).empty();
+                
+                $(txt).empty();
+                
                 $.each(words, function(k, i) {
-                    $(text).append($("<apertiumword />").text(i));
+                    $(txt).append("<apertiumword>" + i + "</apertiumword>");
                 });
                 
                 $(".apertium-popup-translate-text").empty()
                 
                 var disp_txt = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset)).text()
+                
                 // console.log(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset).contents())
                 
                 console.log(disp_txt)
@@ -42,11 +62,13 @@ $(document).mousestop(function() {
                 $(".apertium-popup-translate").css("left",((curr_ev.pageX + 20).toString() + "px"))
                 $(".apertium-popup-translate").css("top",((curr_ev.pageY + 15).toString() + "px"))
                 
-                $(text).empty()
-                $(text).append(orig_text)  
-                k = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset)
-                $(k).contents().unwrap();                
-                              
+                prev_x = curr_ev.pageX - window.pageXOffset
+                prev_y = curr_ev.pageY - window.pageYOffset
+                
+                $(txt).empty()
+                $(txt).append(orig_text)                                
+            } else {
+                $(nodes).unwrap();                
             }
         }   
     }
