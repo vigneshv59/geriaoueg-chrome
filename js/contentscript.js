@@ -60,8 +60,19 @@ $(document).mousestop(function() {
                 if(disp_txt != "") {
                     $(".apertium-popup-translate-text").append(disp_txt)
                     $(".apertium-popup-translate").css("display","table")
-                    $(".apertium-popup-translate").css("left",((curr_ev.pageX + 20).toString() + "px"))
-                    $(".apertium-popup-translate").css("top",((curr_ev.pageY + 15).toString() + "px"))
+                    var y_offset = 15
+                    if ((curr_ev.pageY + 30) > $(window).height()) {
+                        y_offset = -40
+                    }
+                    
+                    var x_offset = 20
+                    
+                    if ((curr_ev.pageY + 40) > $(window).height()) {
+                        x_offset = -60
+                    }
+                    $(".apertium-popup-translate").css("left",((curr_ev.pageX + x_offset).toString() + "px"))
+                    
+                    $(".apertium-popup-translate").css("top",((curr_ev.pageY + y_offset).toString() + "px"))
                 }
                 
                 prev_x = curr_ev.pageX - window.pageXOffset
