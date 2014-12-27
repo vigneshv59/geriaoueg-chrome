@@ -3,7 +3,7 @@ var prev_x = -5
 var prev_y = -5
 var fr_x = 0
 var to_x = 0
-
+ 
 $("body").append("<div id = \"apertium-popup-translate\" class = \"apertium-popup-translate\"> <div id = \"apertium-popup-translate-text\" class = \"apertium-popup-translate-text\"> </div>")   
 
 function real_movement(prex, prey, postx, posty) {
@@ -37,25 +37,25 @@ $(document).mousestop(function() {
             var text = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
             if (text.nodeName == 'APERTIUMNODE') { 
                 $(nodes).unwrap();
-                 
+                
                 var txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
                 var orig_text = $(txt).html();
-                var words = $(txt).text().split(/( )/);
-                
-                
-                
-                $(txt).empty();
-                
-                $.each(words, function(k, i) {
-                    $(txt).append("<apertiumword>" + i + "</apertiumword>");
+                var words = $(txt).text().split(/([ -])/g)
+                                
+                $(txt).empty()
+                $.each(words, function(inx, atext) {
+                    $(txt).append("<apertiumword>" + atext + "</apertiumword>");
                 });
+
+                
+                
                 
                 $(".apertium-popup-translate-text").empty()
                 
                 var disp_txt = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset)).text()
                 
-                // console.log(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset).contents())
-                
+                disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")
+                                
                 console.log(disp_txt)
                 $(".apertium-popup-translate-text").append(disp_txt)
                 $(".apertium-popup-translate").css("display","table")
@@ -73,4 +73,3 @@ $(document).mousestop(function() {
         }   
     }
 });
-

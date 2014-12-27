@@ -1,4 +1,5 @@
 var alllangs = {}
+var locales = {}
 
 function save_options() {
     var fr_lang = $("#from-lang").val()
@@ -26,20 +27,39 @@ function download_languages() {
     xmlHttp.send(null);
     var langs = JSON.parse(xmlHttp.responseText);
     langs = langs["responseData"]
+    var lang_codes = []
+    
     $.each(langs, function(inx, rd){
         if (rd["sourceLanguage"] in alllangs) {
             alllangs[rd["sourceLanguage"]].push(rd["targetLanguage"])   
         } else {
             alllangs[rd["sourceLanguage"]] = [rd["targetLanguage"]]   
         }
+        lang_codes.push(rd["sourceLanguage"])
+        lang_codes.push(rd["targetLanguage"])
     });
+    
+    var reqUrl = "http://apy.projectjj.com/listLanguageNames?locale=en&languages="
+    
+    $.each(lang_codes, function(inx, code){
+        reqUrl = reqUrl + code
+        if (inx < lang_codes.length - 1) {
+            reqUrl = reqUrl + "+"
+        }
+    });
+    
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", reqUrl, false );
+    xmlHttp.send(null);
+    var localedict = JSON.parse(xmlHttp.responseText);
+    locales = localedict
     
     var to_lang = {}
     $.each(Object.keys(alllangs), function(inx, lang) {
-        $("#from-lang").append("<option value=\"" + lang + "\">" + lang + "</option>")
+        $("#from-lang").append("<option value=\"" + lang + "\">" + locales[lang] + "</option>")
         $.each(alllangs[lang], function(ix, l) {
             if (!(l in to_lang)) {
-                $("#to-lang").append("<option value=\"" + l + "\">" + l + "</option>")
+                $("#to-lang").append("<option value=\"" + l + "\">" + locales[l] + "</option>")
                 to_lang[l] = 1
             }
         });
