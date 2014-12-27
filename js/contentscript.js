@@ -57,10 +57,12 @@ $(document).mousestop(function() {
                 disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")
                                 
                 console.log(disp_txt)
-                $(".apertium-popup-translate-text").append(disp_txt)
-                $(".apertium-popup-translate").css("display","table")
-                $(".apertium-popup-translate").css("left",((curr_ev.pageX + 20).toString() + "px"))
-                $(".apertium-popup-translate").css("top",((curr_ev.pageY + 15).toString() + "px"))
+                if(disp_txt != "") {
+                    $(".apertium-popup-translate-text").append(disp_txt)
+                    $(".apertium-popup-translate").css("display","table")
+                    $(".apertium-popup-translate").css("left",((curr_ev.pageX + 20).toString() + "px"))
+                    $(".apertium-popup-translate").css("top",((curr_ev.pageY + 15).toString() + "px"))
+                }
                 
                 prev_x = curr_ev.pageX - window.pageXOffset
                 prev_y = curr_ev.pageY - window.pageYOffset
