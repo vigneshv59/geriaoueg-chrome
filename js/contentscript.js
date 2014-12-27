@@ -68,7 +68,7 @@ $(document).mousestop(function() {
                     var x_offset = 20
                     
                     if ((curr_ev.pageX + 140) > $(window).width()) {
-                        x_offset = -120
+                        x_offset = -60
                     }
                     $(".apertium-popup-translate").css("left",((curr_ev.pageX + x_offset).toString() + "px"))
                     
