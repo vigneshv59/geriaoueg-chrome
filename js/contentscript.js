@@ -37,16 +37,23 @@ $(document).mousestop(function() {
             var text = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
             if (text.nodeName == 'APERTIUMNODE') { 
                 $(nodes).unwrap();
-                
                 var txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
+                var prev_txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
                 var orig_text = $(txt).html();
-                var words = $(txt).text().split(/([ -])/g)
-                                
-                $(txt).empty()
-                $.each(words, function(inx, atext) {
-                    $(txt).append("<apertiumword>" + atext + "</apertiumword>");
+                
+                txt = $(txt).contents().filter(function(){
+                    return this.nodeType == Node.TEXT_NODE && !($(this).text().match(/\A\s*\z/))
                 });
-
+                
+                $.each(txt, function(inx, words) {
+                    var wordarr = $(words).text().split(/([ -])/g)
+                    var dest_str = "" 
+                    $.each(wordarr, function(inx, atext) {
+                        dest_str = dest_str + "<apertiumword>" + atext + "</apertiumword>"
+                    });
+                    $(words).replaceWith(dest_str)
+                    
+                });
                 
                 
                 
@@ -78,8 +85,8 @@ $(document).mousestop(function() {
                 prev_x = curr_ev.pageX - window.pageXOffset
                 prev_y = curr_ev.pageY - window.pageYOffset
                 
-                $(txt).empty()
-                $(txt).append(orig_text)                                
+                $(prev_txt).empty()
+                $(prev_txt).append(orig_text)                                
             } else {
                 $(nodes).unwrap();                
             }
