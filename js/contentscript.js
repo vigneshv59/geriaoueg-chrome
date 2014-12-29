@@ -66,7 +66,7 @@ $(document).mousestop(function() {
                 
                 var disp_txt = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset)).text()
                 
-                disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")
+                // disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")
                                 
                 console.log(disp_txt)
                 if(disp_txt != "") {
@@ -83,9 +83,18 @@ $(document).mousestop(function() {
                     if ((curr_ev.pageX + 70 + $(".apertium-popup-translate-text").outerWidth()) > $(window).width()) {
                         x_offset = -$(".apertium-popup-translate-text").outerWidth() + 20 - 60
                     }
-                    $(".apertium-popup-translate").css("left",((curr_ev.pageX + x_offset).toString() + "px"))
                     
-                    $(".apertium-popup-translate").css("top",((curr_ev.pageY + y_offset).toString() + "px"))
+                    if ((curr_ev.pageX + x_offset) < 0) {
+                        $(".apertium-popup-translate").css("left","5px")
+                    } else {
+                        $(".apertium-popup-translate").css("left",((curr_ev.pageX + x_offset).toString() + "px"))
+                    }
+                    
+                    if ((curr_ev.pageY + y_offset) < 0) {
+                        $(".apertium-popup-translate").css("top","5px")
+                    } else {
+                        $(".apertium-popup-translate").css("top",((curr_ev.pageY + y_offset).toString() + "px"))       
+                    }
                 }
                 
                 prev_x = curr_ev.pageX - window.pageXOffset
