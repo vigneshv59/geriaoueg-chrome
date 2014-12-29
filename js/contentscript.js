@@ -71,16 +71,17 @@ $(document).mousestop(function() {
                 console.log(disp_txt)
                 if(disp_txt != "") {
                     $(".apertium-popup-translate-text").append(disp_txt)
+                    console.log()
                     $(".apertium-popup-translate").css("display","table")
                     var y_offset = 15
-                    if ((curr_ev.pageY + 30) > $(window).height()) {
+                    if ((curr_ev.pageY - window.pageYOffset + 40 + $(".apertium-popup-translate-text").outerHeight()) > $(window).height()) {
                         y_offset = -40
                     }
                     
                     var x_offset = 20
                     
-                    if ((curr_ev.pageX + 140) > $(window).width()) {
-                        x_offset = -60
+                    if ((curr_ev.pageX + 70 + $(".apertium-popup-translate-text").outerWidth()) > $(window).width()) {
+                        x_offset = -$(".apertium-popup-translate-text").outerWidth() + 20 - 60
                     }
                     $(".apertium-popup-translate").css("left",((curr_ev.pageX + x_offset).toString() + "px"))
                     
@@ -98,6 +99,14 @@ $(document).mousestop(function() {
         }   
     }
 });
+
+// $.fn.hiddenWidth = function () {
+//     var clone = this.clone().css("visibility","hidden").appendTo($('body'));
+//     var width = $(clone).outerWidth();
+//     $(clone).remove();
+//     console.log(width)
+//     return width;
+//  };
 
 function htmlEscape(string) {
     return String(string).replace(/[&<>]/g, function (s) {
