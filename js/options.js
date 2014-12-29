@@ -5,9 +5,8 @@ function save_options() {
     var fr_lang = $("#from-lang").val()
     var to_lang = $("#to-lang").val()
     chrome.storage.sync.set({'fr-lang': fr_lang, 'to-lang': to_lang}, function() {
-        // Update status to let user know options were saved.
-        // Should this be there? $("#alert-area").empty()
-        $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>Success!</div>")
+        alert_msg = "Success! Reload pages for changes to take effect."
+        $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
     });
 }
 
@@ -56,10 +55,23 @@ function download_languages() {
     
     var to_lang = {}
     $.each(Object.keys(alllangs), function(inx, lang) {
-        $("#from-lang").append("<option value=\"" + lang + "\">" + locales[lang] + "</option>")
+        var text_lang = locales[lang];
+        if(!text_lang) {
+            var lang_arr = lang.split("_")
+            text_lang = locales[lang_arr[0]]
+            text_lang = text_lang + " " + lang_arr[1]
+        }
+        
+        $("#from-lang").append("<option value=\"" + lang + "\">" + text_lang + "</option>")
         $.each(alllangs[lang], function(ix, l) {
             if (!(l in to_lang)) {
-                $("#to-lang").append("<option value=\"" + l + "\">" + locales[l] + "</option>")
+                var to_text_lang = locales[l];
+                if(!to_text_lang) {
+                    var to_lang_arr = l.split("_")
+                    to_text_lang = locales[to_lang_arr[0]]
+                    to_text_lang = to_text_lang + " " + to_lang_arr[1]
+                }
+                $("#to-lang").append("<option value=\"" + l + "\">" + to_text_lang + "</option>")
                 to_lang[l] = 1
             }
         });

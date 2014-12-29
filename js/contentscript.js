@@ -3,6 +3,11 @@ var prev_x = -5
 var prev_y = -5
 var fr_x = 0
 var to_x = 0
+var escapeChars = {
+   "&": "&amp;",
+   "<": "&lt;",
+   ">": "&gt;",
+ };
  
 $("body").append("<div id = \"apertium-popup-translate\" class = \"apertium-popup-translate\"> <div id = \"apertium-popup-translate-text\" class = \"apertium-popup-translate-text\"> </div>")   
 
@@ -46,10 +51,10 @@ $(document).mousestop(function() {
                 });
                 
                 $.each(txt, function(inx, words) {
-                    var wordarr = $(words).text().split(/([ -])/g)
+                    var wordarr = $(words).text().split(/([\s-;.])/g)
                     var dest_str = "" 
                     $.each(wordarr, function(inx, atext) {
-                        dest_str = dest_str + "<apertiumword>" + atext + "</apertiumword>"
+                        dest_str = dest_str + "<apertiumword>" + htmlEscape(atext) + "</apertiumword>"
                     });
                     $(words).replaceWith(dest_str)
                     
@@ -93,3 +98,9 @@ $(document).mousestop(function() {
         }   
     }
 });
+
+function htmlEscape(string) {
+    return String(string).replace(/[&<>]/g, function (s) {
+      return escapeChars[s];
+    });
+  }
