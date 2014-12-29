@@ -34,13 +34,13 @@ $(document).mousestop(function() {
             return this.nodeType == Node.TEXT_NODE && !($(this).text().match(/\A\s*\z/))
         });
 
-        $(nodes).wrap('<apertiumnode />');
+        $(nodes).wrap('<apertiumproblocation />');
 
         if (nodes.length == 0) {
             $(nodes).unwrap();
         } else {            
             var text = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
-            if (text.nodeName == 'APERTIUMNODE') { 
+            if (text.nodeName == 'APERTIUMPROBLOCATION') { 
                 $(nodes).unwrap();
                 var txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
                 var prev_txt = document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset);
@@ -108,14 +108,6 @@ $(document).mousestop(function() {
         }   
     }
 });
-
-// $.fn.hiddenWidth = function () {
-//     var clone = this.clone().css("visibility","hidden").appendTo($('body'));
-//     var width = $(clone).outerWidth();
-//     $(clone).remove();
-//     console.log(width)
-//     return width;
-//  };
 
 function htmlEscape(string) {
     return String(string).replace(/[&<>]/g, function (s) {
