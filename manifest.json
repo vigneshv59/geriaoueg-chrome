@@ -17,7 +17,8 @@
     
     "browser_action": {
         "default_icon": {                   
-            "128": "apertium128.png"          
+            "19": "apertium19.png",
+            "38": "apertium38.png"        
         },
         "default_title": "Geriaoueg",      
         "default_popup": "html/popup.html"     

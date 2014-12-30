@@ -6,7 +6,7 @@ function save_options() {
     var to_lang = $("#to-lang").val()
     chrome.storage.sync.set({'fr-lang': fr_lang, 'to-lang': to_lang}, function() {
         alert_msg = "Success! Reload pages for changes to take effect."
-        $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
+        // $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
     });
 }
 
@@ -16,6 +16,7 @@ function restore_options() {
             $("#to-lang").val(items["to-lang"])
             $("#from-lang").val(items["fr-lang"])
         }
+        update_selectboxes()
     });
 }
 
@@ -93,15 +94,20 @@ function update_selectboxes() {
     $("#to-lang").val($("#to-lang option[disabled!=\'disabled\']").val())
 }
 
-$("#submit").click( function() {
-    save_options()
-});
+// $("#submit").click( function() {
+//     save_options()
+// });
 
 $("#from-lang").change(function() {
     update_selectboxes()
+    save_options()
+});
+
+$("#to-lang").change(function() {
+    save_options()
 });
 
 $(document).ready(function() {
-    restore_options()
     download_languages()
+    restore_options()
 });
