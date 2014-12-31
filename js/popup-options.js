@@ -110,12 +110,12 @@ function download_languages() {
 
 function enable_disable() {
     chrome.storage.sync.get("apertium-enabled", function(items) {
-        if(items["apertium-enabled"] == "Enabled") {
-            $("#enable-button").html("Disabled")
+        if(items["apertium-enabled"] == "On") {
+            $("#enable-button").html("Off")
             chrome.storage.sync.set({'apertium-enabled': $("#enable-button").html()}, function() {
             });
         } else {
-            $("#enable-button").html("Enabled")
+            $("#enable-button").html("On")
             chrome.storage.sync.set({'apertium-enabled': $("#enable-button").html()}, function() {
             });
         }
@@ -127,11 +127,11 @@ function set_btn_txt() {
         if(items["apertium-enabled"]) {
             $("#enable-button").html(items["apertium-enabled"])
         } else {
-            $("#enable-button").html("Enabled")
+            $("#enable-button").html("On")
             chrome.storage.sync.set({'apertium-enabled': $("#enable-button").html()}, function() {
             });
         }
-        if ($("#enable-button").html() == "Enabled") {
+        if ($("#enable-button").html() == "On") {
             $("#enable-button").addClass('active')
         }
     });
