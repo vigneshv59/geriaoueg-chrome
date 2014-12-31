@@ -83,7 +83,11 @@ function download_langs_with_uri(api_uri) {
                 if(!to_text_lang) {
                     var to_lang_arr = l.split("_")
                     to_text_lang = locales[to_lang_arr[0]]
-                    to_text_lang = to_text_lang + " " + to_lang_arr[1]
+                    if (!to_text_lang) {
+                        to_text_lang = l
+                    } else {
+                        to_text_lang = to_text_lang + " " + to_lang_arr[1]
+                    }
                 }
                 $("#to-lang").append("<option value=\"" + l + "\">" + to_text_lang + "</option>")
                 to_lang[l] = 1
