@@ -25,7 +25,7 @@ $(document).mousemove(function(event) {
     curr_ev = event
 });
 
-$(document).mousestop(function() {
+function mouse_hover() {
     if (curr_ev) {
 
         var elem = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset));
@@ -107,6 +107,20 @@ $(document).mousestop(function() {
             }
         }   
     }
+}
+
+$(document).mousestop(function() {
+    chrome.storage.sync.get("apertium-enabled", function(items) {
+        if(items["apertium-enabled"]) {
+            if(items["apertium-enabled"] == "Enabled") {
+                mouse_hover()
+            }
+        } else {
+            chrome.storage.sync.set({'apertium-enabled': "Enabled"}, function() {
+                mouse_hover()
+            });
+        }
+    });
 });
 
 function htmlEscape(string) {

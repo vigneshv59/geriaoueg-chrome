@@ -8,7 +8,7 @@
         {
             "matches": ["<all_urls>"],
             "css": ["css/basic.css"],
-            "js": ["js/jquery.min.js", "js/mousestop.min.js", "js/xregexp-all-min.js", "js/contentscript.js"],
+            "js": ["js/jquery.min.js", "js/mousestop.min.js", "js/xregexp-all-min.js","js/contentscript.js"],
             "all_frames":true
         }
     ], "permissions": [
