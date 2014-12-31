@@ -69,7 +69,11 @@ function download_langs_with_uri(api_uri) {
         if(!text_lang) {
             var lang_arr = lang.split("_")
             text_lang = locales[lang_arr[0]]
-            text_lang = text_lang + " " + lang_arr[1]
+            if (!text_lang) {
+                text_lang = lang
+            } else {
+                text_lang = text_lang + " " + lang_arr[1]
+            }
         }
         
         $("#from-lang").append("<option value=\"" + lang + "\">" + text_lang + "</option>")
@@ -90,9 +94,7 @@ function download_langs_with_uri(api_uri) {
     update_selectboxes();
 }
 
-function download_languages() {
-    var def_api_uri = "http://apy.projectjj.com/"
-    
+function download_languages() {    
     chrome.storage.sync.get("apertium-api-url", function(items) {
         if (items["apertium-api-url"]) {
             download_langs_with_uri(items["apertium-api-url"])
