@@ -10,6 +10,7 @@ function restore_options() {
 
 function save_api_path() {
     chrome.storage.sync.set({'apertium-api-url': $("#apibox").val()}, function() {
+        chrome.storage.sync.remove(["fr-lang", "to-lang"])
         alert_msg = "Success!"
         $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
     });

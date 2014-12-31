@@ -112,11 +112,11 @@ function mouse_hover() {
 $(document).mousestop(function() {
     chrome.storage.sync.get("apertium-enabled", function(items) {
         if(items["apertium-enabled"]) {
-            if(items["apertium-enabled"] == "Enabled") {
+            if(items["apertium-enabled"] == "On") {
                 mouse_hover()
             }
         } else {
-            chrome.storage.sync.set({'apertium-enabled': "Enabled"}, function() {
+            chrome.storage.sync.set({'apertium-enabled': "On"}, function() {
                 mouse_hover()
             });
         }
