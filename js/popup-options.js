@@ -48,7 +48,14 @@ function download_langs_with_uri(api_uri) {
         }
     });
     
-    var reqUrl = URI.decode(URI(api_uri) + URI("listLanguageNames").addQuery("locale","en").addQuery("languages",codesstr))
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", URI(api_uri) + URI("getLocale"), false );
+    xmlHttp.send(null);
+    var langlocale = JSON.parse(xmlHttp.responseText);
+    langlocale = langlocale[0]
+    
+    langlocale = langlocale.split(/[-_]/)
+    var reqUrl = URI.decode(URI(api_uri) + URI("listLanguageNames").addQuery("locale",langlocale[0]).addQuery("languages",codesstr))
     
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", reqUrl, false );
@@ -87,10 +94,10 @@ function download_languages() {
     var def_api_uri = "http://apy.projectjj.com/"
     
     chrome.storage.sync.get("apertium-api-url", function(items) {
-        if (items) {
+        if (items["apertium-api-url"]) {
             download_langs_with_uri(items["apertium-api-url"])
         } else {
-            download_langs_with_uri(def_api_uri)
+            download_langs_with_uri("http://apy.projectjj.com/")
         }
     });
 }
@@ -117,6 +124,9 @@ function set_btn_txt() {
             $("#enable-button").html("Enabled")
             chrome.storage.sync.set({'apertium-enabled': $("#enable-button").html()}, function() {
             });
+        }
+        if ($("#enable-button").html() == "Enabled") {
+            $("#enable-button").addClass('active')
         }
     });
 }
