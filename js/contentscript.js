@@ -90,8 +90,8 @@ function mouse_hover() {
                             var disp_txt = "Please select a pair."
                         }
                     }
-                    console.log(disp_txt)
-                    if(disp_txt != "") {
+
+                    if(shouldShow(disp_txt)) {
                         $(".apertium-popup-translate-text").append(disp_txt)
                         console.log()
                         $(".apertium-popup-translate").css("display","table")
@@ -139,7 +139,7 @@ function translate_text(apy_url, txt_node, lang_pair) {
     var desired_txt = strip_leading_non_word_chars(txt_node.text().trim())
     var curr_node = txt_node 
     var txt = txt_node.text()
-    while ((ctx_counter < 3) && (curr_node.prev().length != 0)) {
+    while ((ctx_counter < 14) && (curr_node.prev().length != 0)) {
         txt = curr_node.prev().text() + txt
         if(XRegExp("\\p{L}").test(curr_node.prev().text())) {
             ctx_counter = ctx_counter + 1
@@ -151,19 +151,41 @@ function translate_text(apy_url, txt_node, lang_pair) {
         
     }    
     
+    ctx_counter = 0
+    
+    while ((ctx_counter < 14) && (curr_node.next().length != 0)) {
+        txt = txt + curr_node.next().text()
+        if(XRegExp("\\p{L}").test(curr_node.next().text())) {
+            ctx_counter = ctx_counter + 1
+        }
+        curr_node = curr_node.next()  
+    } 
+    
     txt = XRegExp.replace(txt,XRegExp("\\s"),"+")
-    var reqUrl = encodeSemicolon(URI.decode(URI(apy_url) + URI("perWord").addQuery("lang",lang_pair).addQuery("modes","translate").addQuery("q",txt)))
+    var reqUrl = encodeSemicolon(URI.decode(URI(apy_url) + URI("perWord").addQuery("lang",lang_pair).addQuery("modes","biltrans").addQuery("q",txt)))
 
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", reqUrl, false );
     xmlHttp.send(null);
     var lang_arr = JSON.parse(xmlHttp.responseText);
+    var first_time = true
     //Globalize!!
     var translated_txt = "Sorry, we cannot translate \"" + desired_txt + "\""
     $.each(lang_arr, function(inx, trans_obj) {
         if(trans_obj.input == desired_txt) {
             if(ctx_pos == 1) {
-                translated_txt = stripTags((trans_obj.translate)[0])
+                $.each(trans_obj.biltrans, function(inx, btransobj) {
+                    if(first_time) {
+                        if(actualEntry(htmlEscape(btransobj))){
+                            translated_txt = "<li>" + htmlEscape(btransobj) + "</li>" 
+                            first_time = false
+                        }
+                    } else {
+                        if(actualEntry(htmlEscape(btransobj))){
+                            translated_txt += "<li>" + htmlEscape(btransobj) + "</li>" 
+                        }
+                    }
+                })
                 return false;
             } else {
                 ctx_pos = ctx_pos - 1;
@@ -198,5 +220,18 @@ function encodeSemicolon(string) {
 }
 
 function stripTags(string) {
-    return String(string.replace(/<.*$/), "") 
+    return String(string.replace(/<.*$/, "")) 
+}
+
+//I think this works ... Someone should check this logic against the format of the APY.
+function actualEntry(string) {
+    if (XRegExp.test(string.trim(), XRegExp("@\\p{L}"))) {
+        return false;
+    } else {
+        return true;
+    }
+} 
+
+function shouldShow(string) {
+    return XRegExp.test(string.trim(), XRegExp("\\p{L}"))
 }
