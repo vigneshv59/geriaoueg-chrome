@@ -177,12 +177,39 @@ function translate_text(apy_url, txt_node, lang_pair) {
                 $.each(trans_obj.biltrans, function(inx, btransobj) {
                     if(first_time) {
                         if(actualEntry(htmlEscape(btransobj))){
-                            translated_txt = "<li>" + htmlEscape(btransobj) + "</li>" 
+                            word_tags = getTags(btransobj)
+                            var tags_str = ""
+                            $.each(word_tags, function(inx, word_tag) {
+                                tags_str += word_tag
+                                if (inx < (word_tags.length - 1)) {
+                                    tags_str += ", "
+                                }
+                            })
+                            translated_txt = "<li>" + stripTags(htmlEscape(btransobj))
+                            if(tags_str != "") {
+                                translated_txt += " (" + tags_str + ")"+"</li>" 
+                            } else {
+                                translated_txt += "</li>" 
+                            }
                             first_time = false
                         }
                     } else {
                         if(actualEntry(htmlEscape(btransobj))){
-                            translated_txt += "<li>" + htmlEscape(btransobj) + "</li>" 
+                            word_tags = getTags(btransobj)
+                            var tags_str = ""
+                            $.each(word_tags, function(inx, word_tag) {
+                                tags_str += word_tag
+                                if (inx < (word_tags.length - 1)) {
+                                    tags_str += ", "
+                                }
+                            })
+                            
+                            translated_txt += "<li>" + stripTags(htmlEscape(btransobj))
+                            if(tags_str != "") {
+                                translated_txt += " (" + tags_str + ")"+"</li>" 
+                            } else {
+                                translated_txt += "</li>" 
+                            }
                         }
                     }
                 })
@@ -219,10 +246,25 @@ function encodeSemicolon(string) {
     return String(string.replace(/;/g), "%3B") 
 }
 
-function stripTags(string) {
-    return String(string.replace(/<.*$/, "")) 
+function getTags(string) {
+    regex = /<(.*?)>/g
+    word_tags = []
+    tag_match = regex.exec(string)
+    if(tag_match) {
+        word_tags.push(tag_match[1])
+    }
+    while(tag_match) {
+        tag_match = regex.exec(string)
+        if(tag_match) {
+            word_tags.push(tag_match[1])
+        }
+    }
+    return word_tags
 }
 
+function stripTags(string){
+    return String(string.replace(/&lt;.*$/, ""))
+}
 //I think this works ... Someone should check this logic against the format of the APY.
 function actualEntry(string) {
     if (XRegExp.test(string.trim(), XRegExp("@\\p{L}"))) {
