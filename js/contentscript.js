@@ -74,6 +74,9 @@ function mouse_hover() {
                 
                 var disp_txt_node = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset))
                 
+                $(prev_txt).empty()
+                $(prev_txt).append(orig_text) 
+                
                 chrome.storage.sync.get(["apertium-api-url","fr-lang","to-lang"], function(items) {
                     if (items["apertium-api-url"]) {
                         if (items["fr-lang"] && items["to-lang"]) {
@@ -121,9 +124,7 @@ function mouse_hover() {
                 
                     prev_x = curr_ev.pageX - window.pageXOffset
                     prev_y = curr_ev.pageY - window.pageYOffset
-                
-                    $(prev_txt).empty()
-                    $(prev_txt).append(orig_text) 
+    
                 });
                 // disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")                               
             } else {

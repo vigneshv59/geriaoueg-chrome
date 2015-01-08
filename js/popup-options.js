@@ -13,10 +13,10 @@ function save_options() {
 function restore_options() {
     chrome.storage.sync.get(["fr-lang", "to-lang"], function(items) {
         if (items["fr-lang"] && items["to-lang"]) {
-            $("#to-lang").val(items["to-lang"])
             $("#from-lang").val(items["fr-lang"])
+            update_selectboxes()
+            $("#to-lang").val(items["to-lang"]) 
         }
-        update_selectboxes()
     });
 }
 
