@@ -83,14 +83,14 @@ function mouse_hover() {
                             var disp_txt = translate_text(items["apertium-api-url"], disp_txt_node, (items["fr-lang"]+"-"+items["to-lang"]))
                         } else {
                             //Globalize!!
-                            var disp_txt = "Please select a pair."
+                            var disp_txt = "Please click the dropdowns and reselect a pair."
                         }
                     } else {
                         if (items["fr-lang"] && items["to-lang"]) {
                             var disp_txt = translate_text("http://apy.projectjj.com/", disp_txt_node, (items["fr-lang"]+"-"+items["to-lang"]))
                         } else {
                             //Globalize!!
-                            var disp_txt = "Please select a pair."
+                            var disp_txt = "Please click the dropdowns and reselect a pair."
                         }
                     }
 
