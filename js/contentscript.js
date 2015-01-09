@@ -268,7 +268,7 @@ function stripTags(string){
 }
 //I think this works ... Someone should check this logic against the format of the APY.
 function actualEntry(string) {
-    if (XRegExp.test(string.trim(), XRegExp("@\\p{L}"))) {
+    if (XRegExp.test(string.trim(), XRegExp("[@*]\\p{L}"))) {
         return false;
     } else {
         return true;
