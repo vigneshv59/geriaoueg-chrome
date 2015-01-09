@@ -39,7 +39,7 @@ function mouse_hover() {
         var elem = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset));
             
         var nodes = elem.contents().filter(function(){
-            return this.nodeType == Node.TEXT_NODE && !($(this).text().match(/\A\s*\z/))
+            return ((this.nodeType == Node.TEXT_NODE) && !($(this).text().match(/\A\s*\z/)))
         });
 
         $(nodes).wrap('<apertiumproblocation />');
@@ -166,7 +166,7 @@ function translate_text(apy_url, txt_node, lang_pair) {
     var reqUrl = encodeSemicolon(URI.decode(URI(apy_url) + URI("perWord").addQuery("lang",lang_pair).addQuery("modes","biltrans").addQuery("q",txt)))
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", reqUrl, false );
+    xmlHttp.open( "GET", encodeURI(reqUrl), false );
     xmlHttp.send(null);
     var lang_arr = JSON.parse(xmlHttp.responseText);
     var first_time = true
