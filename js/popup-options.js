@@ -4,10 +4,15 @@ var locales = {}
 function save_options() {
     var fr_lang = $("#from-lang").val()
     var to_lang = $("#to-lang").val()
-    chrome.storage.sync.set({'fr-lang': fr_lang, 'to-lang': to_lang}, function() {
-        alert_msg = "Success! Reload pages for changes to take effect."
-        // $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
-    });
+    if((fr_lang != "emptylang") && (to_lang != "emptylang")){
+        chrome.storage.sync.set({'fr-lang': fr_lang, 'to-lang': to_lang}, function() {
+            alert_msg = "Success! Reload pages for changes to take effect."
+            $("#to-lang option[value='emptylang']").remove();
+            $("#from-lang option[value='emptylang']").remove();
+            
+            // $("#alert-area").append("<div class=\"alert alert-success alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span></button>" + alert_msg + "</div>")
+        });
+    }
 }
 
 function restore_options() {
@@ -16,6 +21,11 @@ function restore_options() {
             $("#from-lang").val(items["fr-lang"])
             update_selectboxes()
             $("#to-lang").val(items["to-lang"]) 
+        } else {
+            $("#from-lang").prepend("<option value=\"emptylang\"></option>")
+            $("#from-lang").val("emptylang")
+            $("#to-lang").prepend("<option value=\"emptylang\"></option>")
+            $("#to-lang").val("emptylang")
         }
     });
 }
