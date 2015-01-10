@@ -172,45 +172,18 @@ function translate_text(apy_url, txt_node, lang_pair) {
     var first_time = true
     //Globalize!!
     var translated_txt = "Sorry, we cannot translate \"" + desired_txt + "\""
+    var translate_dict = {}
     $.each(lang_arr, function(inx, trans_obj) {
         if(trans_obj.input == desired_txt) {
             if(ctx_pos == 1) {
                 $.each(trans_obj.biltrans, function(inx, btransobj) {
-                    if(first_time) {
-                        if(actualEntry(htmlEscape(btransobj))){
-                            word_tags = getTags(btransobj)
-                            var tags_str = ""
-                            $.each(word_tags, function(inx, word_tag) {
-                                tags_str += word_tag
-                                if (inx < (word_tags.length - 1)) {
-                                    tags_str += ", "
-                                }
-                            })
-                            translated_txt = "<li>" + stripTags(htmlEscape(btransobj))
-                            if(tags_str != "") {
-                                translated_txt += " (" + tags_str + ")"+"</li>" 
-                            } else {
-                                translated_txt += "</li>" 
-                            }
-                            first_time = false
-                        }
-                    } else {
-                        if(actualEntry(htmlEscape(btransobj))){
-                            word_tags = getTags(btransobj)
-                            var tags_str = ""
-                            $.each(word_tags, function(inx, word_tag) {
-                                tags_str += word_tag
-                                if (inx < (word_tags.length - 1)) {
-                                    tags_str += ", "
-                                }
-                            })
-                            
-                            translated_txt += "<li>" + stripTags(htmlEscape(btransobj))
-                            if(tags_str != "") {
-                                translated_txt += " (" + tags_str + ")"+"</li>" 
-                            } else {
-                                translated_txt += "</li>" 
-                            }
+                    if(actualEntry(htmlEscape(btransobj))){
+                        word_tags = getTags(btransobj)
+                        
+                        if(stripTags(htmlEscape(btransobj)) in translate_dict) {
+                            translate_dict[stripTags(htmlEscape(btransobj))].push(word_tags)
+                        } else {
+                            translate_dict[stripTags(htmlEscape(btransobj))] = [word_tags]
                         }
                     }
                 })
@@ -220,6 +193,36 @@ function translate_text(apy_url, txt_node, lang_pair) {
             }
         } 
     });
+    
+    if ((Object.keys(translate_dict).length) > 0) {
+        $.each(Object.keys(translate_dict), function(inx, trans_dict_key){
+            $.each(translate_dict[trans_dict_key], function(inx, trans_dict_vals) {
+                var tags_str = ""
+                $.each(trans_dict_vals, function(inx, word_tag) {
+                    tags_str += word_tag
+                    if (inx < (trans_dict_vals.length - 1)) {
+                        tags_str += ", "
+                    }
+                })
+                
+                if(inx == 0) {
+                    translated_txt = "<li>" + trans_dict_key
+                    translated_txt += " (" + tags_str + ")"
+                }
+                if(tags_str != "") {
+                    if(inx == translate_dict[trans_dict_key]-1) {
+                        translated_txt += " or (" + tags_str + ") </li>"
+                    } else if(inx != 0){
+                        translated_txt += " or (" + tags_str + ")"
+                    }
+                
+                } else if (inx == translate_dict[trans_dict_key]-1){
+                    translated_txt += "</li>"
+                }   
+            })
+        })
+        
+    }
     return translated_txt
 }
 
