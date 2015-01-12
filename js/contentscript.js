@@ -1,6 +1,6 @@
 var curr_ev = null
-var prev_x = -5
-var prev_y = -5
+var prev_x = -400
+var prev_y = -400
 var fr_x = 0
 var to_x = 0
 var should_update = false
@@ -15,7 +15,7 @@ var escapeChars = {
 $("body").append("<div id = \"apertium-popup-translate\" class = \"apertium-popup-translate\"> <div id = \"apertium-popup-translate-text\" class = \"apertium-popup-translate-text\"> </div>")   
 
 function real_movement(prex, prey, postx, posty) {
-    if (Math.sqrt(Math.pow(prex-postx, 2) + Math.pow(prey-posty, 2)) >= 10) {
+    if (Math.sqrt(Math.pow(prex-postx, 2) + Math.pow(prey-posty, 2)) >= 7) {
         return true;
     }
     return false;
@@ -30,14 +30,15 @@ function strip_leading_non_word_chars(s) {
 $(document).mousemove(function(event) {
     if ((curr_ev) && (real_movement(prev_x, prev_y, event.pageX - window.pageXOffset, curr_ev.pageY - window.pageYOffset))) {
         $(".apertium-popup-translate").css("display","none")
-        should_update = false
+        should_update = true
     }
     curr_ev = event
-    should_update = true
 });
 
 function mouse_hover() {
     if (curr_ev) {
+        prev_x = curr_ev.pageX - window.pageXOffset
+        prev_y = curr_ev.pageY - window.pageYOffset
 
         var elem = $(document.elementFromPoint((curr_ev.pageX - window.pageXOffset), curr_ev.pageY - window.pageYOffset));
             
@@ -124,9 +125,6 @@ function mouse_hover() {
                             $(".apertium-popup-translate").css("top",((curr_ev.pageY + y_offset).toString() + "px"))       
                         }
                     }
-                
-                    prev_x = curr_ev.pageX - window.pageXOffset
-                    prev_y = curr_ev.pageY - window.pageYOffset
     
                 });
                 // disp_txt = XRegExp.replace(disp_txt, new XRegExp("\\P{L}+", "g"), "")                               
