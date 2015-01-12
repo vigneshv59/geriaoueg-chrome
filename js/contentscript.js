@@ -3,6 +3,7 @@ var prev_x = -5
 var prev_y = -5
 var fr_x = 0
 var to_x = 0
+var should_update = false
 var escapeChars = {
    "&": "&amp;",
    "<": "&lt;",
@@ -29,8 +30,10 @@ function strip_leading_non_word_chars(s) {
 $(document).mousemove(function(event) {
     if ((curr_ev) && (real_movement(prev_x, prev_y, event.pageX - window.pageXOffset, curr_ev.pageY - window.pageYOffset))) {
         $(".apertium-popup-translate").css("display","none")
+        should_update = false
     }
     curr_ev = event
+    should_update = true
 });
 
 function mouse_hover() {
@@ -195,7 +198,7 @@ function translate_text(apy_url, txt_node, lang_pair) {
     });
     
     if ((Object.keys(translate_dict).length) > 0) {
-        $.each(Object.keys(translate_dict), function(inx, trans_dict_key){
+        $.each(Object.keys(translate_dict), function(inx_main, trans_dict_key){
             $.each(translate_dict[trans_dict_key], function(inx, trans_dict_vals) {
                 var tags_str = ""
                 $.each(trans_dict_vals, function(inx, word_tag) {
@@ -205,39 +208,48 @@ function translate_text(apy_url, txt_node, lang_pair) {
                     }
                 })
                 
-                if(inx == 0) {
-                    translated_txt = "<li>" + trans_dict_key
-                    translated_txt += " (" + tags_str + ")"
-                }
+                if((inx_main == 0) && (inx == 0)) {
+                    translated_txt = "<b>" + desired_txt + "</b><ul><li>" + trans_dict_key
+                    translated_txt += "<ul> <li>" + tags_str
+                } else if (inx == 0) {
+                    translated_txt += "<li>" + trans_dict_key
+                    translated_txt += "<ul> <li>" + tags_str
+                } 
+                
                 if(tags_str != "") {
-                    if(inx == translate_dict[trans_dict_key]-1) {
-                        translated_txt += " or (" + tags_str + ") </li>"
-                    } else if(inx != 0){
-                        translated_txt += " or (" + tags_str + ")"
+                    if(inx != 0) {
+                        translated_txt += "<li>" + tags_str
+                    }
+                    
+                    if(inx == translate_dict[trans_dict_key].length-1) {
+                        translated_txt += "</ul>"
                     }
                 
-                } else if (inx == translate_dict[trans_dict_key]-1){
-                    translated_txt += "</li>"
+                } else if (inx == translate_dict[trans_dict_key].length-1){
+                    translated_txt += "</ul>"
                 }   
             })
         })
         
     }
-    return translated_txt
+    return (translated_txt + "</ul>")
 }
 
 $(document).mousestop(function() {
-    chrome.storage.sync.get("apertium-enabled", function(items) {
-        if(items["apertium-enabled"]) {
-            if(items["apertium-enabled"] == "On") {
-                mouse_hover()
+    if(should_update){
+        chrome.storage.sync.get("apertium-enabled", function(items) {
+            if(items["apertium-enabled"]) {
+                if(items["apertium-enabled"] == "On") {
+                    mouse_hover()
+                }
+            } else {
+                chrome.storage.sync.set({'apertium-enabled': "On"}, function() {
+                    mouse_hover()
+                });
             }
-        } else {
-            chrome.storage.sync.set({'apertium-enabled': "On"}, function() {
-                mouse_hover()
-            });
-        }
-    });
+        });
+        should_update = false
+    }
 });
 
 function htmlEscape(string) {
